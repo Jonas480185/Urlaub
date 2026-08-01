@@ -44,18 +44,12 @@ export function Plan() {
   const today = todayISO()
   return (
     <div class="screen">
-      <div class="pagehero">
-        <Scene kind="boat" />
-        <div class="shade" />
-        <div class="ph-in">
-          <div class="ph-row">
-            <div>
-              <h1>Der Plan</h1>
-              <div class="sub">13.–20. August · 8 Tage Adria</div>
-            </div>
-            <HeadButtons glass />
-          </div>
+      <div class="pagehead">
+        <div>
+          <h1>Plan</h1>
+          <div class="sub">13.–20. August · 8 Tage Adria</div>
         </div>
+        <HeadButtons />
       </div>
 
       {DAYS.map((date, i) => {
@@ -63,24 +57,24 @@ export function Plan() {
         const isToday = date === today
         const past = date < today
         return (
-          <button key={date} class={`poster ${past ? 'past' : ''}`}
+          <button key={date} class="row" style={{ width: '100%', textAlign: 'left', opacity: past ? .55 : 1 }}
             onClick={() => (sheet.value = { type: 'day', date })}>
-            <Scene kind={dayScene(date, i)} />
-            <div class="shade" />
-            <div class="p-in">
-              <div class="p-top">
-                <span class="p-date">
-                  <b>{dayNum(date)}.</b> {weekday(date)}
-                  {isToday && <span class="tag orange" style={{ marginLeft: 8 }}>Heute</span>}
-                </span>
-                {items.length > 0 && <span class="p-count">{items.length} {items.length === 1 ? 'Punkt' : 'Punkte'}</span>}
-              </div>
-              <div class="p-title">
+            <span class="thumb"><Scene kind={dayScene(date, i)} /></span>
+            <span class="grow">
+              <span class="sub" style={{ display: 'block', fontWeight: 700 }}>
+                {weekday(date)}, {dayNum(date)}.8. {isToday && <span class="tag orange" style={{ marginLeft: 4 }}>Heute</span>}
+              </span>
+              <span class="title">
                 {items.length
                   ? items[0].title + (items.length > 1 ? ` +${items.length - 1}` : '')
-                  : <span class="p-empty">Noch nichts geplant – tippen & loslegen</span>}
-              </div>
-            </div>
+                  : 'Noch nichts geplant'}
+              </span>
+              {items.length === 0 && <span class="sub" style={{ display: 'block' }}>Tippen & ersten Punkt anlegen</span>}
+            </span>
+            <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
+              <Icon name="chevR" size={18} />
+              {items.length > 0 && <span class="hint">{items.length} {items.length === 1 ? 'Punkt' : 'Punkte'}</span>}
+            </span>
           </button>
         )
       })}

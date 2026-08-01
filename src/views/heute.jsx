@@ -35,29 +35,16 @@ export function Heute() {
 
   return (
     <div class="screen">
-      <div class={`pagehero ${preTrip ? 'tall' : ''}`}>
-        <Scene kind={preTrip ? 'sunset' : day ? 'beach' : 'city'} />
-        <div class="shade" />
-        <div class="ph-in">
-          <div class="ph-row">
-            <div>
-              <h1>Hoi {me.value?.name?.split(' ')[0] || ''}!</h1>
-              <div class="sub">{fmtDayLong(todayISO())} · {TRIP.destination.split(' & ')[0]}</div>
-            </div>
-            <HeadButtons glass />
-          </div>
-          {preTrip ? (
-            <div class="countdown">
-              <span class="cd-num">{until}</span>
-              <span class="cd-label">{until === 1 ? 'Tag' : 'Tage'}<br />bis Split <Icon name="plane" size={15} /></span>
-            </div>
-          ) : (
-            <span class="daybadge glass">
-              <Icon name="sun" size={14} />
-              {day ? `Tag ${day} von 8 – genießt es!` : 'Safe travels!'}
-            </span>
-          )}
+      <div class="pagehead">
+        <div>
+          <h1>Hoi {me.value?.name?.split(' ')[0] || ''}! <span aria-hidden="true">☀</span></h1>
+          <div class="sub">{fmtDayLong(todayISO())} · {TRIP.destination.split(' & ')[0]}</div>
+          <span class="daybadge">
+            <Icon name="sun" size={14} />
+            {day ? `Tag ${day} von 8` : preTrip ? `Noch ${until} ${until === 1 ? 'Tag' : 'Tage'} bis Split` : 'Safe travels!'}
+          </span>
         </div>
+        <HeadButtons />
       </div>
 
       {next ? (

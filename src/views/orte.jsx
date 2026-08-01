@@ -16,18 +16,12 @@ export function Orte() {
 
   return (
     <div class="screen">
-      <div class="pagehero">
-        <Scene kind="city" />
-        <div class="shade" />
-        <div class="ph-in">
-          <div class="ph-row">
-            <div>
-              <h1>Orte</h1>
-              <div class="sub">Die besten Spots rund um Split</div>
-            </div>
-            <HeadButtons glass />
-          </div>
+      <div class="pagehead">
+        <div>
+          <h1>Orte</h1>
+          <div class="sub">Die besten Spots rund um Split</div>
         </div>
+        <HeadButtons />
       </div>
 
       <div class="chiprow">

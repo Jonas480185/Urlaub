@@ -44,18 +44,12 @@ export function Einkaufen() {
 
   return (
     <div class="screen">
-      <div class="pagehero">
-        <Scene kind="market" />
-        <div class="shade" />
-        <div class="ph-in">
-          <div class="ph-row">
-            <div>
-              <h1>Einkaufen</h1>
-              <div class="sub">{items.filter(i => !i.done).length} offen · gemeinsame Liste</div>
-            </div>
-            <HeadButtons glass />
-          </div>
+      <div class="pagehead">
+        <div>
+          <h1>Einkaufen</h1>
+          <div class="sub">{items.filter(i => !i.done).length} offen · gemeinsame Liste</div>
         </div>
+        <HeadButtons />
       </div>
 
       <div class="card sand" style={{ padding: 12 }}>
