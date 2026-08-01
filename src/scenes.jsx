@@ -122,7 +122,7 @@ const Scooter = ({ x = 300, y = 196 }) => (
 )
 
 const Awning = () => (
-  <g>
+  <g transform="translate(88 34)">
     <rect x="120" y="96" width="200" height="12" fill="#0A3D5C" />
     <g>
       {Array.from({ length: 8 }, (_, i) => (
@@ -250,9 +250,28 @@ export function Scene({ kind = 'beach', class: cls = '' }) {
   )
 }
 
-// Mapping von Plan-Icons und Orts-Kategorien auf Szenen
-export const sceneForIcon = { plane: 'plane', moon: 'night', sun: 'beach', boat: 'boat', bike: 'coast' }
+// Mapping von Orts-Kategorien auf Szenen
 export const sceneForPlaceCat = {
   unterkunft: 'home', einkaufen: 'market', strand: 'beach', sehen: 'city',
   nightlife: 'night', ausflug: 'boat', transport: 'coast',
 }
+
+// Passende Szene aus Freitext erraten (Titel der Programmpunkte)
+const TEXT_RULES = [
+  [/boot|blue lagoon|insel|segel|kajak/i, 'boat'],
+  [/club|bar|nacht|party|feier/i, 'night'],
+  [/strand|beach|pool|baden|schwimm/i, 'beach'],
+  [/flug|anreise|abreise|heimreise|airport/i, 'plane'],
+  [/roller|bike|rad|wander|tour/i, 'coast'],
+  [/einkauf|lidl|markt|shopping/i, 'market'],
+  [/grill|essen|dinner|sunset|abend/i, 'sunset'],
+  [/altstadt|stadt|trogir|split|riva|marjan/i, 'city'],
+]
+export function sceneForText(text) {
+  for (const [re, kind] of TEXT_RULES) if (re.test(text)) return kind
+  return 'beach'
+}
+
+// Rotation für leere Tage, damit die Plan-Ansicht lebendig aussieht
+const CYCLE = ['plane', 'city', 'beach', 'boat', 'sunset', 'coast', 'night', 'home']
+export const sceneForDayIndex = (i) => CYCLE[((i % CYCLE.length) + CYCLE.length) % CYCLE.length]

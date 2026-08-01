@@ -5,6 +5,7 @@ import { shopping, me, update, toast, sheet } from '../store.js'
 import { Sheet, closeSheet, Avatar, MemberChips, Empty } from '../components.jsx'
 import { useState } from 'preact/hooks'
 import { HeadButtons } from './heute.jsx'
+import { Scene } from '../scenes.jsx'
 
 const catName = (id) => SHOP_CATS.find(c => c.id === id)?.name || 'Sonstiges'
 const catIcon = (id) => SHOP_CATS.find(c => c.id === id)?.icon || 'dots'
@@ -43,12 +44,18 @@ export function Einkaufen() {
 
   return (
     <div class="screen">
-      <div class="pagehead">
-        <div>
-          <h1>Einkaufen</h1>
-          <div class="sub">{items.filter(i => !i.done).length} offen · gemeinsame Liste</div>
+      <div class="pagehero">
+        <Scene kind="market" />
+        <div class="shade" />
+        <div class="ph-in">
+          <div class="ph-row">
+            <div>
+              <h1>Einkaufen</h1>
+              <div class="sub">{items.filter(i => !i.done).length} offen · gemeinsame Liste</div>
+            </div>
+            <HeadButtons glass />
+          </div>
         </div>
-        <HeadButtons />
       </div>
 
       <div class="card sand" style={{ padding: 12 }}>

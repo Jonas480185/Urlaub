@@ -1,20 +1,15 @@
 import { Icon } from '../icons.jsx'
-import { PLAN_SEED } from '../data.js'
-import { fmtDay, fmtDayLong, todayISO, mapsDirUrl, uid } from '../util.js'
+import { DAYS, MEMBERS } from '../data.js'
+import { fmtDayLong, todayISO, mapsDirUrl, uid, toDate } from '../util.js'
 import { plan, me, sheet, update, toast } from '../store.js'
 import { Sheet, closeSheet, AvStack } from '../components.jsx'
-import { Scene, sceneForIcon } from '../scenes.jsx'
+import { Scene, sceneForText, sceneForDayIndex } from '../scenes.jsx'
 import { useState } from 'preact/hooks'
-import { MEMBERS } from '../data.js'
+import { HeadButtons } from './heute.jsx'
 
-// Seed-Items minus gelöschte, plus selbst angelegte – chronologisch sortiert.
-export function visibleItems(day) {
-  const p = plan.value
-  const items = [
-    ...day.items.filter(it => !p.removed.includes(it.id)),
-    ...(p.extra[day.date] || []),
-  ]
-  return items.sort((a, b) => (a.time || '').localeCompare(b.time || ''))
+// Programmpunkte eines Tages – ausschließlich von der Crew angelegt.
+export function visibleItems(date) {
+  return [...(plan.value.extra[date] || [])].sort((a, b) => (a.time || '').localeCompare(b.time || ''))
 }
 
 // Zugesagte Mitglieder; ohne Antwort gilt als zugesagt (Default: alle dabei).
@@ -36,35 +31,56 @@ export function setStatus(itemId, status) {
   })
 }
 
+// Szene eines Tages: erster Programmpunkt bestimmt das Motiv, sonst Rotation.
+export function dayScene(date, i) {
+  const items = visibleItems(date)
+  return items.length ? sceneForText(items.map(x => x.title).join(' ')) : sceneForDayIndex(i)
+}
+
+const weekday = (iso) => toDate(iso).toLocaleDateString('de-DE', { weekday: 'long' })
+const dayNum = (iso) => toDate(iso).getDate()
+
 export function Plan() {
   const today = todayISO()
   return (
     <div class="screen">
-      <div class="pagehead">
-        <div>
-          <h1>Plan</h1>
-          <div class="sub">13.–20. August · Kaštel Sućurac & Split</div>
+      <div class="pagehero">
+        <Scene kind="boat" />
+        <div class="shade" />
+        <div class="ph-in">
+          <div class="ph-row">
+            <div>
+              <h1>Der Plan</h1>
+              <div class="sub">13.–20. August · 8 Tage Adria</div>
+            </div>
+            <HeadButtons glass />
+          </div>
         </div>
       </div>
-      {PLAN_SEED.map(day => {
-        const items = visibleItems(day)
-        const isToday = day.date === today
-        const past = day.date < today
+
+      {DAYS.map((date, i) => {
+        const items = visibleItems(date)
+        const isToday = date === today
+        const past = date < today
         return (
-          <button key={day.date} class="row" style={{ width: '100%', textAlign: 'left', opacity: past ? .55 : 1 }}
-            onClick={() => (sheet.value = { type: 'day', date: day.date })}>
-            <span class="thumb"><Scene kind={sceneForIcon[day.icon] || 'beach'} /></span>
-            <span class="grow">
-              <span class="sub" style={{ display: 'block', fontWeight: 700 }}>
-                {fmtDay(day.date)} {isToday && <span class="tag orange" style={{ marginLeft: 4 }}>Heute</span>}
-              </span>
-              <span class="title">{day.title}</span>
-              <span class="sub" style={{ display: 'block' }}>{day.sub}</span>
-            </span>
-            <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
-              <Icon name="chevR" size={18} />
-              <span class="hint">{items.length} {items.length === 1 ? 'Punkt' : 'Punkte'}</span>
-            </span>
+          <button key={date} class={`poster ${past ? 'past' : ''}`}
+            onClick={() => (sheet.value = { type: 'day', date })}>
+            <Scene kind={dayScene(date, i)} />
+            <div class="shade" />
+            <div class="p-in">
+              <div class="p-top">
+                <span class="p-date">
+                  <b>{dayNum(date)}.</b> {weekday(date)}
+                  {isToday && <span class="tag orange" style={{ marginLeft: 8 }}>Heute</span>}
+                </span>
+                {items.length > 0 && <span class="p-count">{items.length} {items.length === 1 ? 'Punkt' : 'Punkte'}</span>}
+              </div>
+              <div class="p-title">
+                {items.length
+                  ? items[0].title + (items.length > 1 ? ` +${items.length - 1}` : '')
+                  : <span class="p-empty">Noch nichts geplant – tippen & loslegen</span>}
+              </div>
+            </div>
           </button>
         )
       })}
@@ -75,19 +91,24 @@ export function Plan() {
 const STATI = [['yes', 'Dabei'], ['maybe', 'Vielleicht'], ['no', 'Nicht dabei']]
 
 export function DaySheet({ date }) {
-  const day = PLAN_SEED.find(d => d.date === date)
   const [adding, setAdding] = useState(false)
-  if (!day) return null
-  const items = visibleItems(day)
+  const items = visibleItems(date)
+  const i = DAYS.indexOf(date)
 
   return (
-    <Sheet title={day.title} onClose={closeSheet}>
+    <Sheet title={`Tag ${i + 1}`} onClose={closeSheet}>
       <div class="sheetbanner">
-        <Scene kind={sceneForIcon[day.icon] || 'beach'} />
+        <Scene kind={dayScene(date, i)} />
         <div class="shade" />
         <div class="bannertext">{fmtDayLong(date)}</div>
       </div>
-      <div class="hint" style={{ marginTop: -6, marginBottom: 14 }}>{day.sub}</div>
+
+      {items.length === 0 && !adding && (
+        <div class="empty" style={{ padding: '18px 12px 22px' }}>
+          <p>Dieser Tag gehört noch euch – Bootstour, Strandtag, Clubnacht?</p>
+        </div>
+      )}
+
       <div class="timeline">
         {items.map(it => {
           const yes = participantsOf(it.id)
@@ -108,7 +129,6 @@ export function DaySheet({ date }) {
                     onClick={() => {
                       if (!confirm(`„${it.title}" wirklich löschen?`)) return
                       update(plan, 'plan', p => {
-                        p.removed.push(it.id)
                         for (const d in p.extra) p.extra[d] = p.extra[d].filter(x => x.id !== it.id)
                         return p
                       })
@@ -150,7 +170,7 @@ function AddItemForm({ date, onDone }) {
   return (
     <div class="card sand" style={{ marginTop: 6 }}>
       <label class="label" style={{ marginTop: 0 }}>Was ist geplant?</label>
-      <input class="input" placeholder="z. B. Sunset-Drinks an der Riva" value={title} onInput={e => setTitle(e.target.value)} />
+      <input class="input" placeholder="z. B. Bootstour, Strandtag, Clubnacht" value={title} onInput={e => setTitle(e.target.value)} />
       <div class="inputrow" style={{ marginTop: 8 }}>
         <input class="input" type="time" value={time} onInput={e => setTime(e.target.value)} style={{ maxWidth: '9rem' }} />
         <input class="input" placeholder="Treffpunkt" value={place} onInput={e => setPlace(e.target.value)} />

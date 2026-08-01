@@ -35,28 +35,29 @@ export function Ausgaben() {
 
   return (
     <div class="screen">
-      <div class="pagehead">
-        <div>
-          <h1>Ausgaben</h1>
-          <div class="sub">Gruppenkasse · alle in EUR</div>
-        </div>
-        <HeadButtons />
-      </div>
-
-      <div class="hero">
+      <div class="pagehero tall">
         <Scene kind="sunset" />
         <div class="shade" />
-        <div class="hero-in" style={{ paddingBottom: 24 }}>
-          <div class="eyebrow">Gesamtausgaben</div>
-          <div class="bignum">{fmtEUR(total)}</div>
-          <div class="meta">
-            <span><Icon name="users" size={15} />{fmtEUR(perHead)} pro Person</span>
-            <span><Icon name="wallet" size={15} />{pct}% des Budgets</span>
+        <div class="ph-in">
+          <div class="ph-row">
+            <div>
+              <h1>Ausgaben</h1>
+              <div class="sub">Gruppenkasse · alle in EUR</div>
+            </div>
+            <HeadButtons glass />
           </div>
-          <div class="progress"><div style={{ width: pct + '%' }} /></div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.76rem', opacity: .85, marginTop: 6 }}>
-            <span>Budget: {fmtEUR0(k.budget)}</span>
-            <span>Übrig: {fmtEUR0(Math.max(0, k.budget - total))}</span>
+          <div style={{ marginTop: 14 }}>
+            <div class="eyebrow">Gesamtausgaben</div>
+            <div class="bignum">{fmtEUR(total)}</div>
+            <div class="meta">
+              <span><Icon name="users" size={15} />{fmtEUR(perHead)} pro Person</span>
+              <span><Icon name="wallet" size={15} />{pct}% des Budgets</span>
+            </div>
+            <div class="progress"><div style={{ width: pct + '%' }} /></div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.76rem', opacity: .85, marginTop: 6 }}>
+              <span>Budget: {fmtEUR0(k.budget)}</span>
+              <span>Übrig: {fmtEUR0(Math.max(0, k.budget - total))}</span>
+            </div>
           </div>
         </div>
       </div>

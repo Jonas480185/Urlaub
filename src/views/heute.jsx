@@ -1,20 +1,20 @@
 import { Icon } from '../icons.jsx'
-import { TRIP, PLAN_SEED, PLACES } from '../data.js'
+import { TRIP, DAYS, PLACES } from '../data.js'
 import { tripDay, daysUntil, fmtDay, fmtDayLong, todayISO, mapsDirUrl, uberUrl, boltUrl, fmtEUR } from '../util.js'
-import { me, tab, sheet, shopping, kasse, plan, toast, safehome } from '../store.js'
+import { me, tab, sheet, shopping, kasse, toast, safehome, syncState, pullAll } from '../store.js'
 import { AvStack, memberById } from '../components.jsx'
-import { Scene, sceneForIcon } from '../scenes.jsx'
+import { Scene, sceneForText } from '../scenes.jsx'
 import { visibleItems, participantsOf } from './plan.jsx'
 import { openSettlements } from './ausgaben.jsx'
 
 function nextEvent() {
   const now = new Date()
   const today = todayISO()
-  for (const day of PLAN_SEED) {
-    if (day.date < today) continue
-    for (const it of visibleItems(day)) {
-      const dt = new Date(`${day.date}T${it.time || '23:59'}:00`)
-      if (dt >= now) return { day, item: it }
+  for (const date of DAYS) {
+    if (date < today) continue
+    for (const it of visibleItems(date)) {
+      const dt = new Date(`${date}T${it.time || '23:59'}:00`)
+      if (dt >= now) return { date, item: it }
     }
   }
   return null
@@ -31,27 +31,41 @@ export function Heute() {
   const mySettle = openSettlements(kasse.value).filter(s => s.from === me.value?.id)
   const airbnb = PLACES.find(p => p.id === 'airbnb')
   const yes = next ? participantsOf(next.item.id) : []
+  const preTrip = !day && until > 0
 
   return (
     <div class="screen">
-      <div class="pagehead">
-        <div>
-          <h1>Hoi {me.value?.name || ''}! <span aria-hidden="true">☀</span></h1>
-          <div class="sub">{fmtDayLong(todayISO())} · {TRIP.destination.split(' & ')[0]}</div>
-          <span class="daybadge">
-            <Icon name="sun" size={14} />
-            {day ? `Tag ${day} von 8` : until > 0 ? `Noch ${until} Tage bis Split` : 'Safe travels!'}
-          </span>
+      <div class={`pagehero ${preTrip ? 'tall' : ''}`}>
+        <Scene kind={preTrip ? 'sunset' : day ? 'beach' : 'city'} />
+        <div class="shade" />
+        <div class="ph-in">
+          <div class="ph-row">
+            <div>
+              <h1>Hoi {me.value?.name?.split(' ')[0] || ''}!</h1>
+              <div class="sub">{fmtDayLong(todayISO())} · {TRIP.destination.split(' & ')[0]}</div>
+            </div>
+            <HeadButtons glass />
+          </div>
+          {preTrip ? (
+            <div class="countdown">
+              <span class="cd-num">{until}</span>
+              <span class="cd-label">{until === 1 ? 'Tag' : 'Tage'}<br />bis Split <Icon name="plane" size={15} /></span>
+            </div>
+          ) : (
+            <span class="daybadge glass">
+              <Icon name="sun" size={14} />
+              {day ? `Tag ${day} von 8 – genießt es!` : 'Safe travels!'}
+            </span>
+          )}
         </div>
-        <HeadButtons />
       </div>
 
       {next ? (
         <div class="hero">
-          <Scene kind={sceneForIcon[next.day.icon] || 'beach'} />
+          <Scene kind={sceneForText(next.item.title)} />
           <div class="shade" />
           <div class="hero-in">
-            <div class="eyebrow">Als Nächstes · {fmtDay(next.day.date)}</div>
+            <div class="eyebrow">Als Nächstes · {fmtDay(next.date)}</div>
             <h2>{next.item.title}</h2>
             <div class="meta">
               <span><Icon name="clock" size={16} />{next.item.time} Uhr</span>
@@ -69,13 +83,15 @@ export function Heute() {
         </div>
       ) : (
         <div class="hero">
-          <Scene kind="sunset" />
+          <Scene kind="boat" />
           <div class="shade" />
           <div class="hero-in">
-            <div class="eyebrow">Heute</div>
+            <div class="eyebrow">{day ? 'Heute' : 'Euer Plan'}</div>
             <h2>Noch alles offen</h2>
-            <div class="meta"><span>Plant spontan etwas oder genießt einfach die Adria.</span></div>
-            <button class="btn white sm" style={{ marginTop: '12px' }} onClick={() => (tab.value = 'plan')}>Aktivität planen</button>
+            <div class="meta"><span>Bootstour? Strandtag? Plant den ersten Programmpunkt.</span></div>
+            <button class="btn orange sm" style={{ marginTop: '12px' }} onClick={() => (tab.value = 'plan')}>
+              <Icon name="calendar" size={16} />Jetzt planen
+            </button>
           </div>
         </div>
       )}
@@ -108,20 +124,20 @@ export function Heute() {
         </button>
       </div>
 
-      {(mySettle.length > 0 || myOpenShopping.length > 0 || openShopping.length > 0) && (
+      {(mySettle.length > 0 || openShopping.length > 0) && (
         <div class="sectionhead"><h3>Für dich offen</h3></div>
       )}
       {mySettle.map(s => (
         <button key={s.to} class="row" style={{ width: '100%', textAlign: 'left' }} onClick={() => (tab.value = 'ausgaben')}>
-          <span class="qicon" style={{ width: 38, height: 38, borderRadius: 12, background: 'var(--orange-soft)', color: '#A66A00', display: 'grid', placeItems: 'center' }}><Icon name="wallet" size={18} /></span>
+          <span style={{ width: 38, height: 38, borderRadius: 12, background: 'var(--orange-soft)', color: '#A66A00', display: 'grid', placeItems: 'center' }}><Icon name="wallet" size={18} /></span>
           <span class="grow">
             <span class="title">Du schuldest {memberById(s.to)?.name} {fmtEUR(s.amount)}</span>
             <span class="sub" style={{ display: 'block' }}>Tippen zum Ausgleichen</span>
           </span>
-          <Icon name="chevR" class="" size={18} />
+          <Icon name="chevR" size={18} />
         </button>
       ))}
-      {(myOpenShopping.length > 0 || openShopping.length > 0) && (
+      {openShopping.length > 0 && (
         <button class="row" style={{ width: '100%', textAlign: 'left' }} onClick={() => (tab.value = 'einkaufen')}>
           <span style={{ width: 38, height: 38, borderRadius: 12, background: 'var(--teal-soft)', color: 'var(--teal-deep)', display: 'grid', placeItems: 'center' }}><Icon name="cart" size={18} /></span>
           <span class="grow">
@@ -135,11 +151,17 @@ export function Heute() {
   )
 }
 
-export function HeadButtons() {
+export function HeadButtons({ glass = false }) {
+  const st = syncState.value
+  const cls = glass ? 'iconbtn glass' : 'iconbtn'
   return (
     <div class="headbtns">
-      <SyncButton />
-      <button class="iconbtn" onClick={() => (sheet.value = { type: 'profile' })} aria-label="Profil & Gruppe">
+      <button class={`${cls} ${st === 'loading' || st === 'saving' ? 'spin' : ''}`}
+        onClick={() => pullAll(true)} aria-label="Synchronisieren"
+        style={st === 'error' ? { color: 'var(--red)' } : {}}>
+        <Icon name="refresh" />
+      </button>
+      <button class={cls} onClick={() => (sheet.value = { type: 'profile' })} aria-label="Profil & Gruppe">
         {me.value
           ? <span class="avatar" style={{ background: me.value.color }}>{me.value.name.slice(0, 2).toUpperCase()}</span>
           : <Icon name="users" />}
@@ -147,16 +169,3 @@ export function HeadButtons() {
     </div>
   )
 }
-
-import { syncState, pullAll } from '../store.js'
-function SyncButton() {
-  const st = syncState.value
-  return (
-    <button class={`iconbtn ${st === 'loading' || st === 'saving' ? 'spin' : ''}`}
-      onClick={() => pullAll(true)} aria-label="Synchronisieren"
-      style={st === 'error' ? { color: 'var(--red)' } : {}}>
-      <Icon name="refresh" />
-    </button>
-  )
-}
-

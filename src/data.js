@@ -45,58 +45,12 @@ export const SHOP_CATS = [
 export const SHOP_SEED = []
 export const EXPENSE_SEED = []
 
-// Reiseplan 13.–20.08. – items je Tag, Teilnahme wird separat gespeichert.
-export const PLAN_SEED = [
-  { date: '2026-08-13', title: 'Anreise & Check-in', icon: 'plane', vibe: 'day',
-    sub: 'Ankommen, Großeinkauf, erster Abend',
-    items: [
-      { id: 'p13a', time: '09:40', title: 'Abflug', place: 'Flughafen', note: 'Spätestens 07:40 am Gate sein!' },
-      { id: 'p13b', time: '13:30', title: 'Check-in Airbnb', place: 'Kaštel Sućurac', note: 'Schlüsselübergabe mit Host' },
-      { id: 'p13c', time: '16:00', title: 'Großeinkauf', place: 'Lidl Kaštel Sućurac', note: 'Einkaufsliste checken' },
-      { id: 'p13d', time: '20:00', title: 'Entspannter Abend', place: 'Unterkunft', note: 'Grill anwerfen, ankommen' },
-    ] },
-  { date: '2026-08-14', title: 'Split-Tag & Clubnacht', icon: 'moon', vibe: 'night',
-    sub: 'Altstadt, Riva, Marjan – abends Central Club',
-    items: [
-      { id: 'p14a', time: '10:30', title: 'Altstadt & Riva', place: 'Split', note: 'Diokletianpalast, Gassen, Kaffee an der Riva' },
-      { id: 'p14b', time: '15:00', title: 'Marjan oder Strand', place: 'Kašjuni Beach', note: 'Aussichtspunkt oder direkt Strand' },
-      { id: 'p14c', time: '23:00', title: 'Clubnacht', place: 'Central Club', note: 'Rückfahrt über „Sicher nach Hause“ organisieren' },
-    ] },
-  { date: '2026-08-15', title: 'Trogir oder Strandtag', icon: 'sun', vibe: 'day',
-    sub: 'UNESCO-Altstadt oder chillen – abends gemeinsames Essen',
-    items: [
-      { id: 'p15a', time: '11:00', title: 'Trogir Altstadt', place: 'Trogir', note: 'Alternativ: Strandtag Bačvice' },
-      { id: 'p15b', time: '19:30', title: 'Gemeinsames Abendessen', place: 'Konoba in Trogir', note: 'Tisch für 7 reservieren' },
-    ] },
-  { date: '2026-08-16', title: 'Chill- & Pooltag', icon: 'sun', vibe: 'day',
-    sub: 'Relaxen, Sonne, abends Grillabend',
-    items: [
-      { id: 'p16a', time: '12:00', title: 'Pool & Sonne', place: 'Unterkunft', note: 'Sonnencreme!' },
-      { id: 'p16b', time: '20:30', title: 'Grillabend', place: 'Unterkunft', note: 'Grillzeug auf der Einkaufsliste' },
-    ] },
-  { date: '2026-08-17', title: 'Bootstour Blue Lagoon', icon: 'boat', vibe: 'day',
-    sub: 'Private Bootstour – Blue Lagoon & Inseln',
-    items: [
-      { id: 'p17a', time: '11:30', title: 'Bootstour Blue Lagoon', place: 'Trogir Marina', note: 'Treffpunkt 11:15 an der Marina. Handtücher + Sonnencreme!' },
-    ] },
-  { date: '2026-08-18', title: 'Roller-/E-Bike-Tour', icon: 'bike', vibe: 'day',
-    sub: 'Küste von Kaštela erkunden',
-    items: [
-      { id: 'p18a', time: '10:00', title: 'Roller / E-Bikes leihen', place: 'Kaštela', note: 'Führerschein mitnehmen' },
-    ] },
-  { date: '2026-08-19', title: 'Split-Abend & Sunset', icon: 'moon', vibe: 'night',
-    sub: 'Sunset, Bars oder Vanilla Club',
-    items: [
-      { id: 'p19a', time: '18:30', title: 'Sunset am Marjan', place: 'Marjan, Split', note: 'Danach Bars an der Riva' },
-      { id: 'p19b', time: '23:00', title: 'Bars oder Club', place: 'Vanilla Club', note: 'Letzte Nacht – Rückfahrt planen' },
-    ] },
-  { date: '2026-08-20', title: 'Check-out & Heimreise', icon: 'plane', vibe: 'day',
-    sub: 'Aufräumen, auschecken, safe travels!',
-    items: [
-      { id: 'p20a', time: '10:00', title: 'Check-out', place: 'Unterkunft', note: 'Müll raus, Schlüssel an Host' },
-      { id: 'p20b', time: '17:55', title: 'Rückflug', place: 'Flughafen Split', note: 'Check-in-Deadline beachten!' },
-    ] },
+// Die 8 Reisetage als leeres Gerüst – Programmpunkte legt die Crew selbst an.
+export const DAYS = [
+  '2026-08-13', '2026-08-14', '2026-08-15', '2026-08-16',
+  '2026-08-17', '2026-08-18', '2026-08-19', '2026-08-20',
 ]
+
 
 export const PLACE_CATS = [
   { id: 'unterkunft', name: 'Unterkunft', icon: 'home',  color: '#0797A5' },
@@ -126,13 +80,13 @@ export const PLACES = [
   { id: 'trogir', name: 'Trogir Altstadt', cat: 'sehen', lat: 43.5170, lng: 16.2514,
     desc: 'UNESCO-Weltkulturerbe auf einer kleinen Insel.', query: 'Trogir Altstadt' },
   { id: 'marina', name: 'Trogir Marina', cat: 'ausflug', lat: 43.5145, lng: 16.2503,
-    desc: 'Treffpunkt für die Bootstour am 17.08., 11:15 Uhr.', query: 'Trogir Marina' },
+    desc: 'Ablegepunkt für Bootstouren Richtung Blue Lagoon & Inseln.', query: 'Trogir Marina' },
   { id: 'lagoon', name: 'Blue Lagoon', cat: 'ausflug', lat: 43.4416, lng: 16.1522,
-    desc: 'Türkisblaues Wasser bei Drvenik Veli – Ziel der Bootstour.', query: 'Blue Lagoon Drvenik Croatia' },
+    desc: 'Türkisblaues Wasser bei Drvenik Veli – perfekt für eine Bootstour.', query: 'Blue Lagoon Drvenik Croatia' },
   { id: 'central', name: 'Central Club', cat: 'nightlife', lat: 43.5089, lng: 16.4416,
-    desc: 'Größter Club in Split – Clubnacht am 14.08.', query: 'Central Club Split' },
+    desc: 'Größter Club in Split.', query: 'Central Club Split' },
   { id: 'vanilla', name: 'Vanilla Club', cat: 'nightlife', lat: 43.5116, lng: 16.4665,
-    desc: 'Open-Air-Club – Option für den 19.08.', query: 'Vanilla Club Split' },
+    desc: 'Open-Air-Club über dem Stadtstrand.', query: 'Vanilla Club Split' },
   { id: 'bus37', name: 'Bus 37 (Haltestelle)', cat: 'transport', lat: 43.5493, lng: 16.4286,
     desc: 'Linie 37 Split ↔ Trogir hält in Kaštel Sućurac – günstigste Verbindung.', query: 'Kaštel Sućurac bus stop' },
 ]
