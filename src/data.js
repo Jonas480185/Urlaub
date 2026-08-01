@@ -40,31 +40,9 @@ export const SHOP_CATS = [
   { id: 'sonstiges', name: 'Sonstiges', icon: 'dots' },
 ]
 
-export const SHOP_SEED = [
-  { id: 's1',  name: 'Wasser', qty: '6 × 1,5 L', cat: 'getraenke', who: 'max',   done: false },
-  { id: 's2',  name: 'Bier', qty: '2 Kästen', cat: 'getraenke', who: 'lukas', done: false },
-  { id: 's3',  name: 'Softdrinks', qty: '', cat: 'getraenke', who: 'tobi', done: false },
-  { id: 's4',  name: 'Eiswürfel', qty: '2 Beutel', cat: 'getraenke', who: null, done: false },
-  { id: 's5',  name: 'Chips & Salzstangen', qty: '', cat: 'snacks', who: 'nik', done: false },
-  { id: 's6',  name: 'Nüsse', qty: '', cat: 'snacks', who: 'paul', done: false },
-  { id: 's7',  name: 'Brot', qty: '2 Stück', cat: 'fruehstueck', who: 'nik', done: false },
-  { id: 's8',  name: 'Eier', qty: '10er-Pack', cat: 'fruehstueck', who: 'paul', done: false },
-  { id: 's9',  name: 'Käse & Aufschnitt', qty: '', cat: 'fruehstueck', who: 'flo', done: false },
-  { id: 's10', name: 'Sonnencreme', qty: 'LSF 50', cat: 'strand', who: 'lukas', done: false },
-  { id: 's11', name: 'Müllbeutel', qty: '1 Rolle', cat: 'haushalt', who: 'tobi', done: false },
-  { id: 's12', name: 'Küchenrolle', qty: '', cat: 'haushalt', who: null, done: false },
-  { id: 's13', name: 'Toilettenpapier', qty: '1 Pack', cat: 'haushalt', who: null, done: false },
-  { id: 's14', name: 'Elektrolyte', qty: '', cat: 'sonstiges', who: 'jonas', done: false },
-]
-
-export const EXPENSE_SEED = [
-  { id: 'e1', title: 'Unterkunft (Anzahlung)', amount: 1260, cat: 'unterkunft', paidBy: 'jonas',
-    parts: MEMBERS.map(m => m.id), date: '2026-06-15' },
-  { id: 'e2', title: 'Bootstour Blue Lagoon', amount: 630, cat: 'aktivitaet', paidBy: 'jonas',
-    parts: MEMBERS.map(m => m.id), date: '2026-07-28' },
-  { id: 'e3', title: 'Van-Transfer Flughafen', amount: 420, cat: 'transport', paidBy: 'max',
-    parts: MEMBERS.map(m => m.id), date: '2026-07-20' },
-]
+// Einkaufsliste und Kasse starten leer – echte Einträge kommen von der Crew.
+export const SHOP_SEED = []
+export const EXPENSE_SEED = []
 
 // Reiseplan 13.–20.08. – items je Tag, Teilnahme wird separat gespeichert.
 export const PLAN_SEED = [

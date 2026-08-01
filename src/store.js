@@ -6,11 +6,14 @@ import { MEMBERS, TRIP, SHOP_SEED, EXPENSE_SEED, SAFEHOME_DEFAULT } from './data
 // Optionaler geteilter Sync über Supabase-REST (kv-Tabelle, Last-write-wins).
 // ---------------------------------------------------------------------------
 
-const PREFIX = 'ss:'
+// v2: Demodaten entfernt – neuer Prefix, damit alte Seed-Daten auf bereits
+// benutzten Geräten nicht wieder auftauchen. Die gewählte Identität wird migriert.
+const PREFIX = 'ss2:'
 
 function load(key, fallback) {
   try {
     const raw = localStorage.getItem(PREFIX + key)
+      ?? (key === 'profile' || key === 'synccfg' ? localStorage.getItem('ss:' + key) : null)
     return raw ? JSON.parse(raw) : fallback
   } catch (err) {
     console.error('load failed', key, err)
