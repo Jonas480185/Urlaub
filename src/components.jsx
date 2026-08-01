@@ -1,8 +1,11 @@
 import { Icon } from './icons.jsx'
 import { MEMBERS } from './data.js'
-import { sheet } from './store.js'
+import { sheet, crew } from './store.js'
 
-export const memberById = (id) => MEMBERS.find(m => m.id === id)
+// MEMBERS mit ggf. umbenannten Namen (IDs bleiben stabil, daher greifen
+// Umbenennungen automatisch in Kasse, Einkaufsliste, Plan und Autos)
+export const allMembers = () => MEMBERS.map(m => ({ ...m, name: crew.value.names[m.id] || m.name }))
+export const memberById = (id) => allMembers().find(m => m.id === id)
 export const initials = (name) => name.slice(0, 2).toUpperCase()
 
 export function Avatar({ id, size = '', off = false }) {
@@ -50,7 +53,7 @@ export function Empty({ icon = 'sun', text, action, onAction }) {
 export function MemberChips({ selected, onToggle, single = false }) {
   return (
     <div class="chiprow" style={{ flexWrap: 'wrap' }}>
-      {MEMBERS.map(m => {
+      {allMembers().map(m => {
         const on = single ? selected === m.id : selected.includes(m.id)
         return (
           <button key={m.id} class={`chip member ${on ? 'on' : ''}`} onClick={() => onToggle(m.id)}>

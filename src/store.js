@@ -28,6 +28,8 @@ export const kasse = signal(load('kasse', {
 }))
 export const plan = signal(load('plan', { participation: {}, extra: {}, removed: [] }))
 export const safehome = signal(load('safehome', SAFEHOME_DEFAULT))
+// Namens-Überschreibungen pro Mitglieds-ID (geteilt, damit alle dieselben Namen sehen)
+export const crew = signal(load('crew', { names: {} }))
 
 // Lokale Daten (pro Gerät)
 export const profile = signal(load('profile', { memberId: null }))
@@ -39,7 +41,7 @@ export const sheet = signal(null) // { type, props }
 export const toastMsg = signal(null)
 export const syncState = signal('idle') // idle | saving | loading | error
 
-const SHARED = { shopping, kasse, plan, safehome }
+const SHARED = { shopping, kasse, plan, safehome, crew }
 let toastTimer
 export function toast(msg) {
   toastMsg.value = msg
@@ -60,7 +62,10 @@ export function update(sig, key, fn) {
   if (key in SHARED) pushKey(key, next)
 }
 
-export const me = computed(() => MEMBERS.find(m => m.id === profile.value.memberId) || null)
+export const me = computed(() => {
+  const m = MEMBERS.find(x => x.id === profile.value.memberId)
+  return m ? { ...m, name: crew.value.names[m.id] || m.name } : null
+})
 
 // --------------------------- Supabase-REST-Sync ----------------------------
 // Tabelle: kv (k text primary key, v jsonb, t timestamptz) – siehe supabase/schema.sql

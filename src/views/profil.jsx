@@ -1,13 +1,14 @@
 import { Icon } from '../icons.jsx'
-import { MEMBERS, TRIP } from '../data.js'
-import { me, setMember, syncCfg, saveSyncCfg, toast } from '../store.js'
-import { Sheet, closeSheet, Avatar } from '../components.jsx'
+import { TRIP } from '../data.js'
+import { me, setMember, syncCfg, saveSyncCfg, toast, crew, update } from '../store.js'
+import { Sheet, closeSheet, Avatar, allMembers } from '../components.jsx'
 import { useState } from 'preact/hooks'
 
 export function ProfileSheet() {
   const [url, setUrl] = useState(syncCfg.value.url)
   const [key, setKey] = useState(syncCfg.value.key)
   const [showSync, setShowSync] = useState(false)
+  const [renaming, setRenaming] = useState(false)
 
   return (
     <Sheet title="Gruppe & Einstellungen" onClose={closeSheet}>
@@ -19,16 +20,35 @@ export function ProfileSheet() {
         </div>
       </div>
 
-      <label class="label">Die Crew (antippen zum Wechseln)</label>
+      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
+        <label class="label">Die Crew {renaming ? '(Namen tippen & ändern)' : '(antippen zum Wechseln)'}</label>
+        <button class="more" onClick={() => setRenaming(!renaming)}>
+          {renaming ? 'Fertig' : 'Namen bearbeiten'}
+        </button>
+      </div>
       <div class="card" style={{ padding: '6px 16px' }}>
-        {MEMBERS.map(m => (
-          <button key={m.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 0', width: '100%', textAlign: 'left' }}
-            onClick={() => { setMember(m.id); toast(`Du bist jetzt ${m.name}`) }}>
-            <Avatar id={m.id} />
-            <span style={{ flex: 1, fontWeight: 700, fontSize: '.92rem' }}>{m.name}</span>
-            {m.id === me.value?.id && <span class="tag teal"><Icon name="check" size={12} />Du</span>}
-          </button>
+        {allMembers().map(m => (
+          renaming ? (
+            <div key={m.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '5px 0' }}>
+              <Avatar id={m.id} />
+              <input class="input" style={{ minHeight: 40 }} value={m.name} maxLength={20}
+                onChange={e => {
+                  const name = e.target.value.trim()
+                  if (!name) return
+                  update(crew, 'crew', c => { c.names[m.id] = name; return c })
+                  toast('Name gespeichert')
+                }} />
+            </div>
+          ) : (
+            <button key={m.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 0', width: '100%', textAlign: 'left' }}
+              onClick={() => { setMember(m.id); toast(`Du bist jetzt ${m.name}`) }}>
+              <Avatar id={m.id} />
+              <span style={{ flex: 1, fontWeight: 700, fontSize: '.92rem' }}>{m.name}</span>
+              {m.id === me.value?.id && <span class="tag teal"><Icon name="check" size={12} />Du</span>}
+            </button>
+          )
         ))}
+        {renaming && <p class="hint" style={{ padding: '6px 0' }}>Umbenennungen gelten überall – Kasse, Liste, Plan und Autos hängen an der Person, nicht am Namen.</p>}
       </div>
 
       <label class="label">App installieren</label>

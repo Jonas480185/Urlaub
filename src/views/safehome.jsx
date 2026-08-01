@@ -2,7 +2,7 @@ import { Icon } from '../icons.jsx'
 import { MEMBERS, PLACES } from '../data.js'
 import { mapsDirUrl, uberUrl, boltUrl } from '../util.js'
 import { safehome, me, update, toast } from '../store.js'
-import { Avatar, memberById, closeSheet } from '../components.jsx'
+import { Avatar, memberById, allMembers, closeSheet } from '../components.jsx'
 import { useState } from 'preact/hooks'
 
 const STATI = [
@@ -126,7 +126,7 @@ export function SafeHome() {
 
         <h3 style={{ fontWeight: 800, margin: '20px 0 10px' }}>Die Crew</h3>
         <div class="card" style={{ background: 'rgba(255,255,255,.1)', color: '#fff', boxShadow: 'none' }}>
-          {MEMBERS.map(m => {
+          {allMembers().map(m => {
             const st = STATI.find(s => s[0] === (sh.status[m.id] || 'club'))
             return (
               <div key={m.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '7px 0' }}>

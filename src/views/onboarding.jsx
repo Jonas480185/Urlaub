@@ -1,7 +1,7 @@
 import { Icon } from '../icons.jsx'
-import { MEMBERS, TRIP } from '../data.js'
+import { TRIP } from '../data.js'
 import { setMember } from '../store.js'
-import { initials } from '../components.jsx'
+import { initials, allMembers } from '../components.jsx'
 import { useState } from 'preact/hooks'
 
 export function Onboarding() {
@@ -21,7 +21,7 @@ export function Onboarding() {
         <h2 style={{ fontSize: '1.15rem', fontWeight: 800 }}>Wer bist du?</h2>
         <p style={{ fontSize: '.86rem', opacity: .8, marginTop: 4 }}>Wähl deinen Namen – so weiß die Crew, wer was macht.</p>
         <div class="membergrid">
-          {MEMBERS.map(m => (
+          {allMembers().map(m => (
             <button key={m.id} class={`memberpick ${picked === m.id ? 'on' : ''}`} onClick={() => setPicked(m.id)}>
               <span class="avatar" style={{ background: m.color }}>{initials(m.name)}</span>
               {m.name}

@@ -2,7 +2,7 @@ import { Icon } from '../icons.jsx'
 import { MEMBERS, EXPENSE_CATS } from '../data.js'
 import { fmtEUR, fmtEUR0, parseAmount, calcBalances, settle, uid, todayISO } from '../util.js'
 import { kasse, me, update, toast, sheet } from '../store.js'
-import { Sheet, closeSheet, Avatar, memberById, MemberChips, Empty } from '../components.jsx'
+import { Sheet, closeSheet, Avatar, memberById, allMembers, MemberChips, Empty } from '../components.jsx'
 import { useState } from 'preact/hooks'
 import { HeadButtons, Waves } from './heute.jsx'
 
@@ -92,7 +92,7 @@ export function Ausgaben() {
 
       <div class="sectionhead"><h3>Salden</h3></div>
       <div class="card" style={{ padding: '6px 16px' }}>
-        {MEMBERS.map(m => (
+        {allMembers().map(m => (
           <div key={m.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '9px 0', borderBottom: '1px solid var(--line)' }}>
             <Avatar id={m.id} />
             <span class="grow" style={{ fontWeight: 700, fontSize: '.92rem' }}>{m.name}{m.id === me.value?.id ? ' (du)' : ''}</span>

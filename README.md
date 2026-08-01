@@ -14,6 +14,7 @@ Mobile-first PWA: installierbar auf iPhone & Android, offline-fähig, ohne Login
 - **Ausgaben** – Gruppenkasse à la Splitwise: Ausgaben mit beliebiger Beteiligten-Auswahl, Salden pro Person, **„So seid ihr quitt"** mit minimalen Ausgleichszahlungen (Greedy-Matching), Budget-Tracking (4.500 €), Kategorien-Auswertung
 - **Orte** – die besten Spots (Airbnb, Lidl, Altstadt, Kašjuni, Trogir, Blue Lagoon, Clubs, Bus 37 …) mit Deep Links zu Google Maps, Uber & Bolt
 - **Sicher nach Hause** – Vollbild-Ansicht mit Airbnb-Adresse (auch auf Kroatisch), Kopieren/Maps/Uber/Bolt, Aufteilung auf zwei Autos und Live-Status pro Person („Noch im Club" → „Angekommen")
+- **Crew verwalten** – Namen der 7 Mitglieder im Profil-Menü umbenennbar; Umbenennungen greifen überall (Kasse, Liste, Plan, Autos), weil alles an stabilen IDs hängt
 
 ## Warum dieser Tech-Ansatz?
 
@@ -50,6 +51,14 @@ Der Build liegt versioniert in `docs/`. Einmalig aktivieren:
 4. Dieselben zwei Werte an die Crew weitergeben – fertig. Die App pollt alle 30 s, bei App-Fokus und über den Sync-Button.
 
 > Hinweis: Der Anon-Key wirkt wie ein geteilter Reisecode – wer ihn hat, sieht die gemeinsamen Daten. Keine sensiblen Daten eintragen.
+
+## Sicherheit
+
+- Kein Backend im Standard-Modus: Daten bleiben auf dem Gerät (localStorage), nichts verlässt den Browser
+- Keine Secrets im Repo; der optionale Supabase-Anon-Key wird nur lokal auf dem Gerät gespeichert
+- Supabase-Schema mit Row Level Security: nur die 5 App-Datenbereiche erlaubt, Größenlimit gegen Missbrauch, kein Löschen möglich; der Anon-Key wirkt wie ein geteilter Reisecode – keine sensiblen Daten ablegen
+- Eingaben werden ausschließlich als Text gerendert (Preact escapt per Default), externe Links öffnen mit `noopener`
+- `npm audit`: 0 bekannte Schwachstellen (Stand: letzter Build)
 
 ## Mögliche Ausbaustufen
 
