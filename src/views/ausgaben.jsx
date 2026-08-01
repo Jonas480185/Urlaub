@@ -4,7 +4,8 @@ import { fmtEUR, fmtEUR0, parseAmount, calcBalances, settle, uid, todayISO } fro
 import { kasse, me, update, toast, sheet } from '../store.js'
 import { Sheet, closeSheet, Avatar, memberById, allMembers, MemberChips, Empty } from '../components.jsx'
 import { useState } from 'preact/hooks'
-import { HeadButtons, Waves } from './heute.jsx'
+import { HeadButtons } from './heute.jsx'
+import { Scene } from '../scenes.jsx'
 
 const ids = MEMBERS.map(m => m.id)
 
@@ -42,20 +43,22 @@ export function Ausgaben() {
         <HeadButtons />
       </div>
 
-      <div class="hero" style={{ paddingBottom: 26 }}>
-        <div class="deco" /><div class="deco2" />
-        <div class="eyebrow">Gesamtausgaben</div>
-        <div class="bignum">{fmtEUR(total)}</div>
-        <div class="meta">
-          <span><Icon name="users" size={15} />{fmtEUR(perHead)} pro Person</span>
-          <span><Icon name="wallet" size={15} />{pct}% des Budgets</span>
+      <div class="hero">
+        <Scene kind="sunset" />
+        <div class="shade" />
+        <div class="hero-in" style={{ paddingBottom: 24 }}>
+          <div class="eyebrow">Gesamtausgaben</div>
+          <div class="bignum">{fmtEUR(total)}</div>
+          <div class="meta">
+            <span><Icon name="users" size={15} />{fmtEUR(perHead)} pro Person</span>
+            <span><Icon name="wallet" size={15} />{pct}% des Budgets</span>
+          </div>
+          <div class="progress"><div style={{ width: pct + '%' }} /></div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.76rem', opacity: .85, marginTop: 6 }}>
+            <span>Budget: {fmtEUR0(k.budget)}</span>
+            <span>Übrig: {fmtEUR0(Math.max(0, k.budget - total))}</span>
+          </div>
         </div>
-        <div class="progress"><div style={{ width: pct + '%' }} /></div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.76rem', opacity: .85, marginTop: 6 }}>
-          <span>Budget: {fmtEUR0(k.budget)}</span>
-          <span>Übrig: {fmtEUR0(Math.max(0, k.budget - total))}</span>
-        </div>
-        <Waves />
       </div>
 
       <button class="btn primary block" onClick={() => (sheet.value = { type: 'expense' })}>

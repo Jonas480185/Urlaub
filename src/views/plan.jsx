@@ -3,6 +3,7 @@ import { PLAN_SEED } from '../data.js'
 import { fmtDay, fmtDayLong, todayISO, mapsDirUrl, uid } from '../util.js'
 import { plan, me, sheet, update, toast } from '../store.js'
 import { Sheet, closeSheet, AvStack } from '../components.jsx'
+import { Scene, sceneForIcon } from '../scenes.jsx'
 import { useState } from 'preact/hooks'
 import { MEMBERS } from '../data.js'
 
@@ -52,11 +53,7 @@ export function Plan() {
         return (
           <button key={day.date} class="row" style={{ width: '100%', textAlign: 'left', opacity: past ? .55 : 1 }}
             onClick={() => (sheet.value = { type: 'day', date: day.date })}>
-            <span style={{
-              width: 46, height: 46, borderRadius: 15, flex: 'none', display: 'grid', placeItems: 'center',
-              background: day.vibe === 'night' ? '#EDE7F9' : 'var(--teal-soft)',
-              color: day.vibe === 'night' ? 'var(--violet)' : 'var(--teal-deep)',
-            }}><Icon name={day.icon} size={22} /></span>
+            <span class="thumb"><Scene kind={sceneForIcon[day.icon] || 'beach'} /></span>
             <span class="grow">
               <span class="sub" style={{ display: 'block', fontWeight: 700 }}>
                 {fmtDay(day.date)} {isToday && <span class="tag orange" style={{ marginLeft: 4 }}>Heute</span>}
@@ -85,7 +82,12 @@ export function DaySheet({ date }) {
 
   return (
     <Sheet title={day.title} onClose={closeSheet}>
-      <div class="hint" style={{ marginTop: -8, marginBottom: 14 }}>{fmtDayLong(date)} · {day.sub}</div>
+      <div class="sheetbanner">
+        <Scene kind={sceneForIcon[day.icon] || 'beach'} />
+        <div class="shade" />
+        <div class="bannertext">{fmtDayLong(date)}</div>
+      </div>
+      <div class="hint" style={{ marginTop: -6, marginBottom: 14 }}>{day.sub}</div>
       <div class="timeline">
         {items.map(it => {
           const yes = participantsOf(it.id)

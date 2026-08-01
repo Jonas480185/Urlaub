@@ -3,6 +3,7 @@ import { PLACES, PLACE_CATS } from '../data.js'
 import { mapsUrl, mapsDirUrl, uberUrl, boltUrl } from '../util.js'
 import { toast, sheet } from '../store.js'
 import { Sheet, closeSheet } from '../components.jsx'
+import { Scene, sceneForPlaceCat } from '../scenes.jsx'
 import { useState } from 'preact/hooks'
 import { HeadButtons } from './heute.jsx'
 
@@ -36,10 +37,7 @@ export function Orte() {
         const c = catOf(p.cat)
         return (
           <div key={p.id} class="row" style={{ alignItems: 'flex-start' }}>
-            <span style={{
-              width: 44, height: 44, borderRadius: 14, flex: 'none', display: 'grid', placeItems: 'center',
-              background: c.color + '1E', color: c.color, marginTop: 2,
-            }}><Icon name={c.icon} size={20} /></span>
+            <span class="thumb sm" style={{ marginTop: 2 }}><Scene kind={sceneForPlaceCat[p.cat] || 'beach'} /></span>
             <button class="grow" style={{ textAlign: 'left' }} onClick={() => (sheet.value = { type: 'place', id: p.id })}>
               <span class="title">{p.name}</span>
               <span class="sub" style={{ display: 'block' }}>{p.desc}</span>
@@ -61,6 +59,11 @@ export function PlaceSheet({ id }) {
   const c = catOf(p.cat)
   return (
     <Sheet title={p.name} onClose={closeSheet}>
+      <div class="sheetbanner">
+        <Scene kind={sceneForPlaceCat[p.cat] || 'beach'} />
+        <div class="shade" />
+        <div class="bannertext">{p.name}</div>
+      </div>
       <span class="tag" style={{ background: c.color + '1E', color: c.color }}>
         <Icon name={c.icon} size={13} />{c.name}
       </span>

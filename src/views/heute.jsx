@@ -3,6 +3,7 @@ import { TRIP, PLAN_SEED, PLACES } from '../data.js'
 import { tripDay, daysUntil, fmtDay, fmtDayLong, todayISO, mapsDirUrl, uberUrl, boltUrl, fmtEUR } from '../util.js'
 import { me, tab, sheet, shopping, kasse, plan, toast, safehome } from '../store.js'
 import { AvStack, memberById } from '../components.jsx'
+import { Scene, sceneForIcon } from '../scenes.jsx'
 import { visibleItems, participantsOf } from './plan.jsx'
 import { openSettlements } from './ausgaben.jsx'
 
@@ -46,31 +47,36 @@ export function Heute() {
       </div>
 
       {next ? (
-        <div class={`hero ${next.day.vibe === 'night' ? 'night' : ''}`}>
-          <div class="deco" /><div class="deco2" />
-          <div class="eyebrow">Als Nächstes · {fmtDay(next.day.date)}</div>
-          <h2>{next.item.title}</h2>
-          <div class="meta">
-            <span><Icon name="clock" size={16} />{next.item.time} Uhr</span>
-            <span><Icon name="pin" size={16} />{next.item.place}</span>
+        <div class="hero">
+          <Scene kind={sceneForIcon[next.day.icon] || 'beach'} />
+          <div class="shade" />
+          <div class="hero-in">
+            <div class="eyebrow">Als Nächstes · {fmtDay(next.day.date)}</div>
+            <h2>{next.item.title}</h2>
+            <div class="meta">
+              <span><Icon name="clock" size={16} />{next.item.time} Uhr</span>
+              <span><Icon name="pin" size={16} />{next.item.place}</span>
+            </div>
+            <div class="meta" style={{ alignItems: 'center' }}>
+              <AvStack ids={yes} />
+              <span style={{ fontSize: '.84rem' }}>{yes.length}/7 zugesagt</span>
+            </div>
+            <div style={{ display: 'flex', gap: '8px', marginTop: '14px' }}>
+              <button class="btn white sm" onClick={() => open(mapsDirUrl(next.item.place))}><Icon name="nav" size={16} />Route</button>
+              <button class="btn orange sm" onClick={() => (tab.value = 'plan')}><Icon name="calendar" size={16} />Zum Plan</button>
+            </div>
           </div>
-          <div class="meta" style={{ alignItems: 'center' }}>
-            <AvStack ids={yes} />
-            <span style={{ fontSize: '.84rem' }}>{yes.length}/7 zugesagt</span>
-          </div>
-          <div style={{ display: 'flex', gap: '8px', marginTop: '14px' }}>
-            <button class="btn white sm" onClick={() => open(mapsDirUrl(next.item.place))}><Icon name="nav" size={16} />Route</button>
-            <button class="btn orange sm" onClick={() => (tab.value = 'plan')}><Icon name="calendar" size={16} />Zum Plan</button>
-          </div>
-          <Waves />
         </div>
       ) : (
         <div class="hero">
-          <div class="deco" />
-          <div class="eyebrow">Heute</div>
-          <h2>Noch alles offen</h2>
-          <div class="meta"><span>Plant spontan etwas oder genießt einfach die Adria.</span></div>
-          <button class="btn white sm" style={{ marginTop: '12px' }} onClick={() => (tab.value = 'plan')}>Aktivität planen</button>
+          <Scene kind="sunset" />
+          <div class="shade" />
+          <div class="hero-in">
+            <div class="eyebrow">Heute</div>
+            <h2>Noch alles offen</h2>
+            <div class="meta"><span>Plant spontan etwas oder genießt einfach die Adria.</span></div>
+            <button class="btn white sm" style={{ marginTop: '12px' }} onClick={() => (tab.value = 'plan')}>Aktivität planen</button>
+          </div>
         </div>
       )}
 
@@ -154,10 +160,3 @@ function SyncButton() {
   )
 }
 
-export function Waves() {
-  return (
-    <svg class="wavebar" viewBox="0 0 400 30" height="26" width="100%" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M0 18 Q 25 8 50 18 T 100 18 T 150 18 T 200 18 T 250 18 T 300 18 T 350 18 T 400 18 V30 H0 Z" fill="#fff" />
-    </svg>
-  )
-}

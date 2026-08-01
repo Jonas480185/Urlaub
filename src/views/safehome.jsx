@@ -3,6 +3,7 @@ import { MEMBERS, PLACES } from '../data.js'
 import { mapsDirUrl, uberUrl, boltUrl } from '../util.js'
 import { safehome, me, update, toast } from '../store.js'
 import { Avatar, memberById, allMembers, closeSheet } from '../components.jsx'
+import { Scene } from '../scenes.jsx'
 import { useState } from 'preact/hooks'
 
 const STATI = [
@@ -50,6 +51,12 @@ export function SafeHome() {
           </div>
           <button class="iconbtn" style={{ background: 'rgba(255,255,255,.15)', color: '#fff', boxShadow: 'none' }}
             onClick={closeSheet} aria-label="Schließen"><Icon name="x" /></button>
+        </div>
+
+        <div class="sheetbanner">
+          <Scene kind="night" />
+          <div class="shade" />
+          <div class="bannertext">Gemeinsam sicher zurück</div>
         </div>
 
         <div class="card" style={{ background: 'rgba(255,255,255,.1)', backdropFilter: 'blur(6px)', color: '#fff', boxShadow: 'none' }}>
