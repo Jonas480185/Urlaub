@@ -6,7 +6,11 @@ import { sheet, crew } from './store.js'
 // Umbenennungen automatisch in Kasse, Einkaufsliste, Plan und Autos)
 export const allMembers = () => MEMBERS.map(m => ({ ...m, name: crew.value.names[m.id] || m.name }))
 export const memberById = (id) => allMembers().find(m => m.id === id)
-export const initials = (name) => name.slice(0, 2).toUpperCase()
+// "Jonas" → "JO", "Luis Weide" → "LWe", "Luis Wurstmann" → "LWu"
+export const initials = (name) => {
+  const w = name.trim().split(/\s+/)
+  return w.length > 1 ? w[0][0].toUpperCase() + w[1].slice(0, 2) : name.slice(0, 2).toUpperCase()
+}
 
 export function Avatar({ id, size = '', off = false }) {
   const m = memberById(id)

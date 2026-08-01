@@ -10,14 +10,15 @@ export const TRIP = {
   departure: { label: 'Abflug', when: '2026-08-13T09:40:00' },
 }
 
+// IDs bleiben stabil (auch bei Umbenennung) – daran hängen Kasse, Liste & Co.
 export const MEMBERS = [
-  { id: 'jonas', name: 'Jonas', color: '#0797A5' },
-  { id: 'max',   name: 'Max',   color: '#F5A623' },
-  { id: 'lukas', name: 'Lukas', color: '#5E3AAE' },
-  { id: 'tobi',  name: 'Tobi',  color: '#D64545' },
-  { id: 'nik',   name: 'Nik',   color: '#1B9E6B' },
-  { id: 'paul',  name: 'Paul',  color: '#3B6FD4' },
-  { id: 'flo',   name: 'Flo',   color: '#C2571B' },
+  { id: 'jonas', name: 'Jonas',          color: '#0797A5' },
+  { id: 'max',   name: 'Luis Weide',     color: '#F5A623' },
+  { id: 'lukas', name: 'Luis Wurstmann', color: '#5E3AAE' },
+  { id: 'tobi',  name: 'Ben',            color: '#D64545' },
+  { id: 'nik',   name: 'Niklas',         color: '#1B9E6B' },
+  { id: 'paul',  name: 'Jan',            color: '#3B6FD4' },
+  { id: 'flo',   name: 'Jens',           color: '#C2571B' },
 ]
 
 export const EXPENSE_CATS = [
